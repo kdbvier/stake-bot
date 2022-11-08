@@ -91,7 +91,6 @@ function log(logstr) {
     )}.log`,
     logstr + "\n"
   );
-  console.log("logstr", logstr);
 }
 
 async function main() {
@@ -117,7 +116,6 @@ async function main() {
     flag = true;
     first = true;
   }
-  console.log("before history push: ");
   history.push({
     date: Math.round(new Date().getTime() / 1000),
   });
@@ -131,7 +129,6 @@ async function main() {
     console.error(err);
   }
   if (!flag) return;
-  console.log("after history push: ");
   var tmClient = await Tendermint34Client.connect(RPC);
 
   //Get the DAO Staker List
@@ -142,12 +139,10 @@ async function main() {
     "https://lcd-juno.cosmostation.io/wasm/contract/" + contractAddr + "/state",
     false
   ); // false for synchronous request
-  console.log("xml open");
   xmlHttp.send(null);
   let daostakers = JSON.parse(xmlHttp.responseText).result;
 
   exec("rm -rf .node-xmlhttprequest-sync-*");
-  console.log("exec result");
   let dao_staker_list = [];
 
   let dao_staker_amount = 0;
