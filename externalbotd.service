@@ -1,0 +1,17 @@
+[Unit]
+Description=External Bot Start Script
+After=network.service
+
+[Service]
+Type=simple
+User=root
+
+ExecStart=/usr/local/bin/externalbotstart.sh
+
+Restart=on-failure
+RestartSec=2
+
+#LimitNOFILE=4096
+
+[Install]
+WantedBy=multi-user.target
