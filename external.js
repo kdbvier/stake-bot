@@ -117,7 +117,7 @@ async function main() {
     flag = true;
     first = true;
   }
-
+  console.log("before history push: ", history);
   history.push({
     date: Math.round(new Date().getTime() / 1000),
   });
