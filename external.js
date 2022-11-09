@@ -17,6 +17,7 @@ import { XMLHttpRequest } from "xmlhttprequest";
 // import { UTF8 } from 'utf-8';
 
 import pkg from "utf8";
+import { Console } from "console";
 const { encode, decode } = pkg;
 
 // const utf8 = import('utf8');
@@ -128,7 +129,7 @@ async function main() {
   } catch (err) {
     console.error(err);
   }
-  if (!flag) return;
+  // if (!flag) return;
   var tmClient = await Tendermint34Client.connect(RPC);
 
   //Get the DAO Staker List
@@ -187,6 +188,7 @@ async function main() {
         funds: [],
       },
     };
+    console.log("msg: ", msg);
 
     msglist.push(msg);
 
