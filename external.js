@@ -153,7 +153,9 @@ async function main() {
       dao_staker_amount += parseInt(amount);
     }
   }
-  exec(`junod q wasm cs all ${contractAddr} --page-key ${next_key}`);
+  exec(
+    `junod q wasm cs all ${contractAddr} --page-key ${next_key} --output json > tmp.json`
+  );
   console.log("total staker amount : " + dao_staker_amount);
   console.log("daoStakerList: ", dao_staker_list);
   let msglist = [];
