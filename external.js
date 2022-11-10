@@ -14,13 +14,13 @@ import { history } from "./history.js";
 import moment from "moment";
 import { exec } from "child_process";
 import { XMLHttpRequest } from "xmlhttprequest";
+import msgJson from "./tmp.json" assert { type: "json" };
 // import { UTF8 } from 'utf-8';
 
 import pkg from "utf8";
-import { Console } from "console";
 const { encode, decode } = pkg;
 
-// const utf8 = import('utf8');
+const utf8 = import("utf8");
 
 const RPC = "https://rpc-juno.itastakers.com:443";
 
@@ -129,28 +129,19 @@ async function main() {
   } catch (err) {
     console.error(err);
   }
-  // if (!flag) return;
+  if (!flag) return;
   var tmClient = await Tendermint34Client.connect(RPC);
 
-  //Get the DAO Staker List
-  // junod q wasm cs all <STAKING_CONTRACT_ADDRESS> --node https://rpc-juno.itastakers.com:443 --output json > tmp.json
-  var xmlHttp = new XMLHttpRequest();
-  xmlHttp.open(
-    "GET",
-    "https://lcd-juno.cosmostation.io/wasm/contract/" + contractAddr + "/state",
-    false
-  ); // false for synchronous request
-  xmlHttp.send(null);
-  let daostakers = JSON.parse(xmlHttp.responseText).result;
-
-  exec("rm -rf .node-xmlhttprequest-sync-*");
   let dao_staker_list = [];
-
+  const {
+    models,
+    pagination: { next_key },
+  } = msgJson;
   let dao_staker_amount = 0;
   let staker = "";
   let amount = "";
-  for (let i = 0; i < daostakers.length; i++) {
-    let decoded = decodeString(daostakers[i].key);
+  for (let i = 0; i < models.length; i++) {
+    let decoded = decodeString(models[i].key);
     let temp = decoded.split("staked_balances");
 
     if (temp.length > 1) {
@@ -162,8 +153,9 @@ async function main() {
       dao_staker_amount += parseInt(amount);
     }
   }
+  exec(`junod q wasm cs all ${contractAddr} --page-key ${next_key}`);
   console.log("total staker amount : " + dao_staker_amount);
-
+  console.log("daoStakerList: ", dao_staker_list);
   let msglist = [];
 
   let total_reward_amount = 0;
@@ -188,7 +180,6 @@ async function main() {
         funds: [],
       },
     };
-    console.log("msg: ", msg);
 
     msglist.push(msg);
 
